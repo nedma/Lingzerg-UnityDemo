@@ -1,0 +1,182 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: FX-SimpleRiver
+  m_Shader: {fileID: 4800000, guid: 22b4dd8e176d72044b48a73b0218bee2, type: 3}
+  m_ShaderKeywords: _ENABLECUSTOMFOG_ON _ENABLEREFLECTIONS_ON _SURGETYPE_ON
+  m_LightmapFlags: 4
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 3000
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BackFog:
+        m_Texture: {fileID: 2800000, guid: 8b801643175b42a43968fce81a3ba292, type: 3}
+        m_Scale: {x: 10, y: 10}
+        m_Offset: {x: 0, y: 0}
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FlowMap:
+        m_Texture: {fileID: 2800000, guid: ec52a374022d4ff439acbb500f036aa1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FoamTexture:
+        m_Texture: {fileID: 2800000, guid: d63de87929fbec544a975601def1dda3, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FontFog:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _LargeWavesTexture:
+        m_Texture: {fileID: 2800000, guid: a1753c559f28ef742bf787c146c0f4f9, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MediumWavesTexture:
+        m_Texture: {fileID: 2800000, guid: 6a17415de83249943807b8d911d38225, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTex:
+        m_Texture: {fileID: 2800000, guid: 7514e297e0799d349b1d8ba47c27efc1, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ReflectionTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SmallWavesTexture:
+        m_Texture: {fileID: 2800000, guid: 550a0d5fe17c18f43b16c8ac33b209fd, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Surge:
+        m_Texture: {fileID: 2800000, guid: 41f3dab905893304a9b558a777a270ca, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SurgeTex:
+        m_Texture: {fileID: 2800000, guid: b91b889a4bbbd364aa453a57d53b3a70, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _BumpScale: 1
+    - _Cutoff: 0.5
+    - _Density: 10
+    - _DepthTransparency: 7.97
+    - _DetailNormalMapScale: 1
+    - _DistanceTilingFade: 1
+    - _DistortStrength: 0.106
+    - _DistortTimeFactor: 0.1
+    - _Distortion: 0
+    - _DstBlend: 0
+    - _EnableCustomFog: 1
+    - _EnableReflections: 1
+    - _Fade: 2.6
+    - _FlowSpeed: 0.5
+    - _FoamBlend: 0.84
+    - _FoamContrast: 0.4
+    - _FoamDistFade: 2.87
+    - _FoamDistFalloff: 20.1
+    - _FoamIntensity: 5
+    - _FoamSpeed: 100
+    - _FoamTiling: 10
+    - _FoamVisibility: 0.315
+    - _FogDistance: 1500
+    - _FogFade: 1
+    - _FormType: 0
+    - _Gloss: 0.283
+    - _GlossMapScale: 1
+    - _Glossiness: 0.5
+    - _GlossyReflections: 1
+    - _IntersectPower: 0.22
+    - _IntersectionPower: 0
+    - _LargeWaveRefraction: 2.5
+    - _LargeWavesSpeed: 60
+    - _LargeWavesTiling: 0.5
+    - _LightWrapping: 0.5
+    - _LongTilingDistance: 500
+    - _MediumTilingDistance: 200
+    - _MediumWaveRefraction: 2
+    - _MediumWavesSpeed: 45
+    - _MediumWavesTiling: 3
+    - _Metallic: 0
+    - _Mode: 0
+    - _NoiseRange: 1
+    - _OcclusionStrength: 1
+    - _Parallax: 0.02
+    - _Range: 1.5
+    - _ReflectionIntensity: 0.546
+    - _RefractionDistance: 30
+    - _RefractionFalloff: 2
+    - _RimPower: 1
+    - _RimStrength: 2.13
+    - _ShoreFade: 0.3
+    - _ShoreTransparency: 1.89
+    - _SmallWaveRrefraction: 1
+    - _SmallWavesSpeed: -60
+    - _SmallWavesTiling: 1.5
+    - _SmoothnessTextureChannel: 0
+    - _Specular: 0.41
+    - _SpecularHighlights: 1
+    - _SrcBlend: 1
+    - _SurgeDelta: 1
+    - _SurgeRange: 1
+    - _SurgeSpeed: 20
+    - _SurgeType: 1
+    - _UVSec: 0
+    - _UnderwaterMode: 0
+    - _UsingLinearColorSpace: 0
+    - _WaveBlend: 0.77
+    - _WaveFade: 1.19
+    - _ZWrite: 1
+    m_Colors:
+    - _Color: {r: 0.4198113, g: 0.7543079, b: 1, a: 1}
+    - _DeepWaterColor: {r: 0.16647385, g: 0.3312068, b: 0.4056604, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FoamColor: {r: 0.3823529, g: 0.3879758, b: 0.3879758, a: 1}
+    - _FogColor: {r: 0.8014706, g: 0.8014706, b: 0.8014706, a: 1}
+    - _MainColor: {r: 0.2523139, g: 0.32621223, b: 0.39622635, a: 0.627451}
+    - _Range: {r: 0.13, g: 1.53, b: 2.3, a: 0.78}
+    - _SurgeColor: {r: 0.027055884, g: 0.15989077, b: 0.3018868, a: 1}
+    - _WaterColor: {r: 0.1504094, g: 0.32318735, b: 0.49056602, a: 1}
