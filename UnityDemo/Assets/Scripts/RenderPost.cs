@@ -70,7 +70,7 @@ public class RenderPost : MonoBehaviour
         Shader.SetGlobalTexture("_LastDepthTexture", depthTex);
     }
 
-    private void OnPostRender()
+    private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
         if (isCustomDepth)
         {
@@ -82,13 +82,34 @@ public class RenderPost : MonoBehaviour
                     PostBloom(colorRT);
                 }
 
-                Graphics.Blit(colorRT, (RenderTexture) null);
-                // Graphics.Blit(colorRT, _Camera.targetTexture);
+                //Graphics.Blit(colorRT, (RenderTexture)null);
+                Graphics.Blit(colorRT, destination);
             }
+        } else
+        {
+            Graphics.Blit(source, destination);
         }
+    }
+
+    //private void OnPostRender()
+    //{
+    //    if (isCustomDepth)
+    //    {
+    //        //把颜色写回相机目标纹理
+    //        if (colorRT != null)
+    //        {
+    //            if (getBloomMaterial != null && isBloom)
+    //            {
+    //                PostBloom(colorRT);
+    //            }
+
+    //            Graphics.Blit(colorRT, (RenderTexture) null);
+    //            // Graphics.Blit(colorRT, _Camera.targetTexture);
+    //        }
+    //    }
 
         
-    }
+    //}
 
 
     #region RenderTexture Depth

@@ -94,7 +94,7 @@
 				"RenderType" = "Transparent"
 			}
 
-		//GrabPass{ "_GrabTexture" }
+		GrabPass{ "_GrabTexture" }
 
         Pass
         {
@@ -124,10 +124,10 @@
 			uniform float _Fade;
 			
 			//自定义全局纹理, 深度和屏幕颜色
-			uniform sampler2D_float _LastDepthTexture;
-			uniform sampler2D_float _SceneColorTexture;
-			//uniform sampler2D _GrabTexture;
-			//uniform sampler2D_float _CameraDepthTexture;
+			//uniform sampler2D_float _LastDepthTexture;
+			//uniform sampler2D_float _SceneColorTexture;
+			uniform sampler2D _GrabTexture;
+			uniform sampler2D_float _CameraDepthTexture;
 
 			//反射相关的
 			uniform sampler2D _ReflectionTex;
@@ -231,6 +231,7 @@
 				i.projPos = ComputeScreenPos(i.pos);
 				COMPUTE_EYEDEPTH(i.projPos.z);
 				i.screenPos = i.pos;
+				
                 return i;
             }
 
@@ -393,7 +394,7 @@
 				
 				/**根据深度和坐标拿到当前的深度差**/
 				//屏幕深度
-				float sceneZ = max(0, LinearEyeDepth(UNITY_SAMPLE_DEPTH(tex2Dproj(_LastDepthTexture, UNITY_PROJ_COORD(i.projPos)))) - _ProjectionParams.g);
+				float sceneZ = max(0, LinearEyeDepth(UNITY_SAMPLE_DEPTH(tex2Dproj(_CameraDepthTexture, UNITY_PROJ_COORD(i.projPos)))) - _ProjectionParams.g);
 				float partZ = max(0, i.projPos.z - _ProjectionParams.g);
 
 				//深度差可以做很多事,比如岸边,根据深度颜色变化
@@ -409,7 +410,7 @@
 							_RefractionFalloff)));
 
 				//截屏用在这里
-				float4 sceneColor = tex2D(_SceneColorTexture, sceneUVs);
+				float4 sceneColor = tex2D(_GrabTexture, sceneUVs);
 				
 				//根据深度混合Deep color 和 water color
 				float3 _blendWaterColor = saturate(
