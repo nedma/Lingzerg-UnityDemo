@@ -623,12 +623,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isCustomDepth: 0
+  boxFilterBlurShader: {fileID: 4800000, guid: f3c1d188091a63641b365c1663c38dae, type: 3}
+  _BlurIterations: 1
   isBloom: 0
-  iterations: 3
-  blurSpread: 0.6
-  bloomDownSample: 2
-  luminanceThreshold: 0.6
-  bloomShader: {fileID: 0}
+  bloomIntensity: 1
+  bloomIterations: 1
+  bloomThreshold: 0.51
+  bloomSoftThreshold: 0.445
+  bloomShader: {fileID: 4800000, guid: 7bd73db0ebe784c49b009baf970543cf, type: 3}
 --- !u!114 &1427036963
 MonoBehaviour:
   m_ObjectHideFlags: 0

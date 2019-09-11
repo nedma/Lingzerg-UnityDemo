@@ -72,21 +72,22 @@ public class RenderPost : MonoBehaviour
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
-        if (isCustomDepth)
+        if (isCustomDepth && colorRT != null)
         {
             //把颜色写回相机目标纹理
-            if (colorRT != null)
+            if (getBloomMaterial != null && isBloom)
             {
-                if (getBloomMaterial != null && isBloom)
-                {
-                    PostBloom(colorRT);
-                }
-
-                //Graphics.Blit(colorRT, (RenderTexture)null);
-                Graphics.Blit(colorRT, destination);
+                PostBloom(colorRT);
             }
+
+            Graphics.Blit(colorRT, destination);
         } else
         {
+
+            if (getBloomMaterial != null && isBloom)
+            {
+                PostBloom(source);
+            }
             Graphics.Blit(source, destination);
         }
     }
@@ -155,24 +156,91 @@ public class RenderPost : MonoBehaviour
 
     #endregion
 
+    #region Blur RenderTexture
+
+    //临时测试变量
+    [Header("Blur")]
+    public Shader boxFilterBlurShader;
+    private Material boxFilterMaterial = null;
+
+    public Material getBoxFilterMaterial
+    {
+        get
+        {
+            boxFilterMaterial = CheckShaderAndCreateMaterial(boxFilterBlurShader, boxFilterMaterial);
+            return boxFilterMaterial;
+        }
+    }
+
+    [Range(1, 16)]
+    public int _BlurIterations = 1;
+
+    const int BoxDownPass = 0;
+    const int BoxUpPass = 1;
+
+    public void BlurTexture(Texture source, int iterator, int blurSize, int downSample, RenderTexture PrintImage)
+    {
+        RenderTexture[] textures = new RenderTexture[16];
+
+        int width = source.width / downSample;
+        int height = source.height / downSample;
+        RenderTextureFormat format = PrintImage.format;
+        PrintImage.DiscardContents();
+        RenderTexture currentDestination = textures[0] =
+            RenderTexture.GetTemporary(width, height, 0, format);
+        currentDestination.DiscardContents();
+
+        Graphics.Blit(source, currentDestination, getBoxFilterMaterial, BoxDownPass);
+        RenderTexture currentSource = currentDestination;
+
+        int i = 1;
+        for (; i < iterator; i++)
+        {
+            width /= 2;
+            height /= 2;
+            if (height < 2)
+            {
+                break;
+            }
+            currentDestination = textures[i] =
+                RenderTexture.GetTemporary(width, height, 0, format);
+            Graphics.Blit(currentSource, currentDestination, getBoxFilterMaterial, BoxDownPass);
+            currentSource.DiscardContents();
+            currentSource = currentDestination;
+        }
+
+        for (i -= 2; i >= 0; i--)
+        {
+            currentDestination = textures[i];
+            textures[i] = null;
+            Graphics.Blit(currentSource, currentDestination, getBoxFilterMaterial, BoxUpPass);
+            RenderTexture.ReleaseTemporary(currentSource);
+            currentSource = currentDestination;
+        }
+        currentDestination.DiscardContents();
+        Graphics.Blit(currentDestination, PrintImage, getBoxFilterMaterial, BoxUpPass);
+        RenderTexture.ReleaseTemporary(currentDestination);
+    }
+
+
+    #endregion
 
     #region Post-Bloom
 
     [Header("Post - Bloom")]
     public bool isBloom;
 
-    [Range(0, 4)]
-    public int iterations = 3;
+    [Range(0, 10)]
+    public float bloomIntensity = 1;
 
-    // Blur spread for each iteration - larger value means more blur
-    [Range(0.2f, 3.0f)]
-    public float blurSpread = 0.6f;
+    [Range(1, 16)]
+    public int bloomIterations = 4;
 
-    [Range(1, 8)]
-    public int bloomDownSample = 2;
+    [Range(0, 10)]
+    public float bloomThreshold = 1;
 
-    [Range(0.0f, 4.0f)]
-    public float luminanceThreshold = 0.6f;
+    [Range(0, 1)]
+    public float bloomSoftThreshold = 0.5f;
 
     public Shader bloomShader;
 
@@ -186,51 +254,72 @@ public class RenderPost : MonoBehaviour
         }
     }
 
-    void PostBloom(RenderTexture src)
+    const int BoxDownPrefilterPass = 0;
+    const int ApplyBloomPass = 3;
+    const int DebugBloomPass = 4;
+
+
+    RenderTexture[] textures = new RenderTexture[16];
+
+    void PostBloom(RenderTexture source)
     {
-        getBloomMaterial.SetFloat("_LuminanceThreshold", luminanceThreshold);
+        float knee = bloomThreshold * bloomSoftThreshold;
+        Vector4 filter;
+        filter.x = bloomThreshold;
+        filter.y = filter.x - knee;
+        filter.z = 2f * knee;
+        filter.w = 0.25f / (knee + 0.00001f);
+        getBloomMaterial.SetVector("_Filter", filter);
+        getBloomMaterial.SetFloat("_Intensity", Mathf.GammaToLinearSpace(bloomIntensity));
 
-        int rtW = src.width / bloomDownSample;
-        int rtH = src.height / bloomDownSample;
+        int width = source.width;
+        int height = source.height;
+        RenderTextureFormat format = source.format;
 
-        RenderTexture buffer0 = RenderTexture.GetTemporary(rtW, rtH, 0);
-        buffer0.filterMode = FilterMode.Bilinear;
+        RenderTexture currentDestination = textures[0] = RenderTexture.GetTemporary(width, height, 0, format);
+        currentDestination.DiscardContents();
+        Graphics.Blit(source, currentDestination, getBloomMaterial, BoxDownPrefilterPass);
+        RenderTexture currentSource = currentDestination;
 
-        Graphics.Blit(src, buffer0, getBloomMaterial, 0);
+        int i = 1;
 
-        for (int i = 0; i < iterations; i++)
+        for (; i < bloomIterations; i++)
         {
-            getBloomMaterial.SetFloat("_BlurSize", 1.0f + i * blurSpread);
+            width /= 2;
+            height /= 2;
+            if (height < 2)
+            {
+                break;
+            }
+            currentDestination = textures[i] = RenderTexture.GetTemporary(width, height, 0, format);
+            currentSource.DiscardContents();
+            Graphics.Blit(currentSource, currentDestination, getBloomMaterial, BoxDownPass);
 
-            RenderTexture buffer1 = RenderTexture.GetTemporary(rtW, rtH, 0);
-
-            // Render the vertical pass
-            Graphics.Blit(buffer0, buffer1, getBloomMaterial, 1);
-
-            RenderTexture.ReleaseTemporary(buffer0);
-            buffer0 = buffer1;
-            buffer1 = RenderTexture.GetTemporary(rtW, rtH, 0);
-
-            // Render the horizontal pass
-            Graphics.Blit(buffer0, buffer1, getBloomMaterial, 2);
-
-            RenderTexture.ReleaseTemporary(buffer0);
-            buffer0 = buffer1;
+            currentSource = currentDestination;
         }
-        getBloomMaterial.SetTexture("_Bloom", buffer0);
 
-        RenderTexture dest = RenderTexture.GetTemporary(src.width, src.height, 0);
-        dest.filterMode = FilterMode.Bilinear;
+        for (i -= 2; i >= 0; i--)
+        {
+            currentDestination = textures[i];
+            textures[i] = null;
+            Graphics.Blit(currentSource, currentDestination, getBloomMaterial, BoxUpPass);
+            RenderTexture.ReleaseTemporary(currentSource);
+            currentSource = currentDestination;
+        }
+        getBloomMaterial.SetTexture("_SourceTex", source);
 
-        Graphics.Blit(src, dest, getBloomMaterial, 3);
-        Graphics.Blit(dest,src);
-        RenderTexture.ReleaseTemporary(buffer0);
-        RenderTexture.ReleaseTemporary(dest);
-       
+        RenderTexture destination = RenderTexture.GetTemporary(width, height, 0, format);
+        destination.DiscardContents();
+        Graphics.Blit(currentSource, destination, getBloomMaterial, ApplyBloomPass);
+
+        Graphics.Blit(destination, source);
+
+        RenderTexture.ReleaseTemporary(destination);
+        RenderTexture.ReleaseTemporary(currentSource);
+
     }
 
     #endregion
-
 
     #region util
 
